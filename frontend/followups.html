@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReceptionAI · Follow-up Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <nav class="app-navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-logo"><i class="bi bi-robot"></i></span>
+        <span>
+          <span class="brand-name"><b>Reception</b>AI</span><br>
+          <span class="brand-tag">Lead Conversion Engine</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link"><i class="bi bi-chat-dots"></i> Chat</a>
+        <a href="employee_dashboard.html" class="nav-link"><i class="bi bi-people"></i> Employee</a>
+        <a href="ceo_dashboard.html" class="nav-link"><i class="bi bi-graph-up-arrow"></i> CEO</a>
+        <a href="followups.html" class="nav-link active"><i class="bi bi-calendar-check"></i> Follow-ups</a>
+      </div>
+      <div class="nav-right">
+        <span id="healthPill" class="health-pill"><span class="hp-dot"></span><span class="hp-text">Checking…</span></span>
+        <button id="resetDemoBtn" class="btn-ghost danger" title="Reset all demo data"><i class="bi bi-arrow-counterclockwise"></i> Reset Demo</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <!-- header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Sales Operations</div>
+        <h1>Follow-up Manager</h1>
+        <p>Never let a lead go cold. Track AI-recommended and manual follow-ups, and queue new outreach instantly.</p>
+      </div>
+      <div class="page-actions">
+        <select id="statusFilter" class="input" style="max-width:170px">
+          <option value="ALL">All follow-ups</option>
+          <option value="pending">⏳ Pending</option>
+          <option value="completed">✅ Completed</option>
+        </select>
+        <button id="refreshBtn" class="btn-grad"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+      </div>
+    </div>
+
+    <!-- stat cards -->
+    <div class="stat-grid">
+      <div class="stat violet"><div class="s-ico"><i class="bi bi-list-check"></i></div><div class="s-val" id="statTotal">—</div><div class="s-lbl">Total Follow-ups</div><div class="s-sub">all tracked</div></div>
+      <div class="stat warm"><div class="s-ico"><i class="bi bi-clock-history"></i></div><div class="s-val" id="statPending">—</div><div class="s-lbl">Pending</div><div class="s-sub">awaiting action</div></div>
+      <div class="stat green"><div class="s-ico"><i class="bi bi-check2-circle"></i></div><div class="s-val" id="statDone">—</div><div class="s-lbl">Completed</div><div class="s-sub">closed out</div></div>
+      <div class="stat cold"><div class="s-ico"><i class="bi bi-percent"></i></div><div class="s-val" id="statRate">—</div><div class="s-lbl">Completion Rate</div><div class="s-sub">done vs total</div></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Create follow-up -->
+      <div class="card" style="align-self:start">
+        <div class="card-head">
+          <div class="card-title"><span class="card-ico"><i class="bi bi-plus-circle"></i></span> Create Follow-up</div>
+        </div>
+        <form id="fuForm">
+          <div class="field">
+            <label>Customer ID *</label>
+            <input id="fuCustomer" class="input" type="text" placeholder="e.g. web-abc123" required>
+          </div>
+          <div class="grid-12-12">
+            <div class="field" style="margin:0">
+              <label>Channel</label>
+              <select id="fuChannel" class="input">
+                <option value="phone">📞 Phone</option>
+                <option value="email">✉️ Email</option>
+                <option value="sms">💬 SMS</option>
+                <option value="general">📋 General</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label>Scheduled Time</label>
+              <input id="fuWhen" class="input" type="datetime-local">
+            </div>
+          </div>
+          <div class="field mt">
+            <label>Reason / Note *</label>
+            <textarea id="fuReason" class="input" placeholder="e.g. Send pricing deck and book discovery call" required></textarea>
+          </div>
+          <button type="submit" class="btn-grad" style="width:100%;justify-content:center"><i class="bi bi-calendar-plus"></i> Schedule Follow-up</button>
+        </form>
+      </div>
+
+      <!-- Follow-up table -->
+      <div class="card col-span-2" style="grid-column:1/-1">
+        <div class="card-head">
+          <div class="card-title"><span class="card-ico"><i class="bi bi-table"></i></span> Follow-up Queue</div>
+          <span class="badge tag" id="rowCount">0 items</span>
+        </div>
+        <div class="table-wrap">
+          <table class="lead-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Reason / Note</th>
+                <th>Channel</th>
+                <th>Scheduled</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="fuBody">
+              <tr><td colspan="6" class="loading-cell"><span class="spinner"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Health -->
+      <div class="card" id="healthCard"></div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/followups.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReceptionAI · Employee Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <nav class="app-navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-logo"><i class="bi bi-robot"></i></span>
+        <span>
+          <span class="brand-name"><b>Reception</b>AI</span><br>
+          <span class="brand-tag">Lead Conversion Engine</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link"><i class="bi bi-chat-dots"></i> Chat</a>
+        <a href="employee_dashboard.html" class="nav-link active"><i class="bi bi-people"></i> Employee</a>
+        <a href="ceo_dashboard.html" class="nav-link"><i class="bi bi-graph-up-arrow"></i> CEO</a>
+        <a href="followups.html" class="nav-link"><i class="bi bi-calendar-check"></i> Follow-ups</a>
+      </div>
+      <div class="nav-right">
+        <span id="healthPill" class="health-pill"><span class="hp-dot"></span><span class="hp-text">Checking…</span></span>
+        <button id="resetDemoBtn" class="btn-ghost danger" title="Reset all demo data"><i class="bi bi-arrow-counterclockwise"></i> Reset Demo</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <!-- header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Sales Workspace</div>
+        <h1>Employee Dashboard</h1>
+        <p>Every visitor the AI receptionist has engaged — ranked by lead score so reps work the hottest opportunities first.</p>
+      </div>
+      <div class="page-actions">
+        <div class="search-box"><i class="bi bi-search"></i><input id="search" class="input" type="text" placeholder="Search name or phone…"></div>
+        <select id="statusFilter" class="input" style="max-width:160px">
+          <option value="ALL">All statuses</option>
+          <option value="HOT">🔥 Hot</option>
+          <option value="WARM">☀️ Warm</option>
+          <option value="COLD">❄️ Cold</option>
+        </select>
+        <button id="refreshBtn" class="btn-grad"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+      </div>
+    </div>
+
+    <!-- stat cards -->
+    <div class="stat-grid">
+      <div class="stat violet"><div class="s-ico"><i class="bi bi-people-fill"></i></div><div class="s-val" id="statTotal">—</div><div class="s-lbl">Total Leads</div><div class="s-sub" id="statTotalSub">all visitors engaged</div></div>
+      <div class="stat hot"><div class="s-ico">🔥</div><div class="s-val" id="statHot">—</div><div class="s-lbl">Hot Leads</div><div class="s-sub" id="statHotSub">score ≥ 70 · priority</div></div>
+      <div class="stat warm"><div class="s-ico">☀️</div><div class="s-val" id="statWarm">—</div><div class="s-lbl">Warm Leads</div><div class="s-sub" id="statWarmSub">nurturing in progress</div></div>
+      <div class="stat cold"><div class="s-ico">❄️</div><div class="s-val" id="statCold">—</div><div class="s-lbl">Cold Leads</div><div class="s-sub" id="statColdSub">low intent / early</div></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Lead table -->
+      <div class="card col-span-2" style="grid-column:1/-1">
+        <div class="card-head">
+          <div class="card-title"><span class="card-ico"><i class="bi bi-table"></i></span> Lead Pipeline</div>
+          <span class="badge tag" id="rowCount">0 leads</span>
+        </div>
+        <div class="table-wrap">
+          <table class="lead-table">
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Phone</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Sentiment</th>
+                <th>Interactions</th>
+                <th>Last Seen</th>
+              </tr>
+            </thead>
+            <tbody id="leadBody">
+              <tr><td colspan="7" class="loading-cell"><span class="spinner"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Health monitor -->
+      <div class="card" id="healthCard"></div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/employee.js"></script>
+</body>
+</html>
